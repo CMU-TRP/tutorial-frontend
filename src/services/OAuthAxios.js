@@ -3,8 +3,9 @@ const apiClient = axios.create({
     baseURL: process.env.VUE_APP_BACKEND_URL,
 
     headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+        Accept: '*/*',
+        'Content-Type': 'application/x-www-form-urlencoded',
+
     }
 })
 export default apiClient

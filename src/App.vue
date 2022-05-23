@@ -5,31 +5,17 @@
 
   <div id="nav">
     <nav class="navbar navbar-expand">
-      <ul v-if="!GStore.currentUser" class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link to="/register" class="nav-link">
-            <font-awesome-icon icon="user-plus" /> Sign Up
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/login" class="nav-link">
-            <font-awesome-icon icon="sign-in-alt" /> Login
-          </router-link>
-        </li>
-      </ul>
-      <ul v-if="GStore.currentUser" class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <router-link to="/profile" class="nav-link">
-            <font-awesome-icon icon="user" />
-            {{ GStore.currentUser.name }}
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" @click="logout">
-            <font-awesome-icon icon="sign-out-alt" /> LogOut
-          </a>
-        </li>
-      </ul>
+      <div v-if="!currentUser" class="container unauth">
+        With CMU Account: <a href="https://oauth.cmu.ac.th/v1/Authorize.aspx?response_type=code&client_id=7a2tEVznj823QypVnrBJHbRu7dnfdbrmTmwesF8K&redirect_uri=http:/localhost:8081/redirect&scope=cmuitaccount.basicinfo&state=xyz">
+        Click here</a>
+        With OAuth CMUSE Account <a href="http://localhost:8082/articles">Click here</a>
+      </div>
+      <div v-if="currentUser" class="container authenticated">
+      Logged in as: {{currentUser}}
+      <div>
+    <button @click="logout" class="btn btn-primary">Logout</button>
+  </div>
+    </div>
     </nav>
     <router-link :to="{ name: 'EventList' }">Home</router-link> |
     <router-link :to="{ name: 'About' }">About</router-link>
@@ -49,19 +35,20 @@ export default {
   computed: {
     currentUser() {
       return AuthService.getUser()
-    },
-    isAdmin() {
-      return AuthService.hasRoles('ROLE_ADMIN')
     }
   },
   methods: {
     logout() {
       AuthService.logout()
-      this.$router.go()
+      this.$router.push({
+        name: 'EventList'
+      })
+      location.reload();
     }
   }
 }
 </script>
+
 <style>
 @keyframes yellowfade {
   from {
